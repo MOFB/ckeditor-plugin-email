@@ -59,7 +59,32 @@ CKEDITOR.dialog.add('editEmailDataDialog', function(editor)
                         type:   'text',
                         id:     'reply_to',
                         label:  'Reply To',
-                    }
+                    },
+                    {
+                        type:   'html',
+                        html:   '<hr>'
+                    },
+                    {
+                        type:  'select',
+                        id:    'type',
+                        label: 'Type of email',
+                        required: true,
+                        items: CKEDITOR_EMAIL_TYPES,
+                    },
+                    {
+                        type:  'select',
+                        id:    'enabled',
+                        label: 'Status of this email',
+                        items:
+                        [
+                            ['Enabled',  '1' ],
+                            ['Disabled', '0' ],
+                        ]
+                    },
+                    {
+                        type:   'html',
+                        html:   '<p class="notice">NOTICE: There can ONLY be one of each type enabled, if you enable a type then the current enabled email of this type will be disabled automatically</em></p>'
+                    },
                 ]
             },
             {
@@ -75,14 +100,15 @@ CKEDITOR.dialog.add('editEmailDataDialog', function(editor)
                         type:     'textarea',
                         id:       'text_body',
                         label:    'Plain Text',
-                        rows:    '10'
+                        rows:    '20',
+                        cols:    '40'
                     }
                 ]
             }
         ],
         onOk: function () {
             var dia = this;
-            $.each(['name','from','reply_to','subject'], function(i, name) {
+            $.each(['name','from','type','enabled','reply_to','subject'], function(i, name) {
                 $('input[name="'+name+'"]').val(dia.getValueOf('general',  name));
                 $('.ckeditor_info .'+name+' span').html( dia.getValueOf('general', name));
             });
@@ -96,7 +122,7 @@ CKEDITOR.dialog.add('editEmailDataDialog', function(editor)
         },
         onShow: function () {
             var dia = this;
-            $.each(['name','from','reply_to','subject'], function(i, name) {
+            $.each(['name','from','type','enabled','reply_to','subject'], function(i, name) {
                 dia.setValueOf('general',  name, $('input[name="'+name+'"]').val());
             });
             dia.setValueOf('plain_text', 'text_body', $('input[name="text_body"]').val());
